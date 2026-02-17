@@ -22,7 +22,10 @@ spec:
     spec:
       containers:
       - name: cats-dogs-api
-        image: <DOCKER_USERNAME>/cats-dogs-classifier:latest
+        # For local deployment: cats-dogs-classifier:latest
+        # For production: replace with your-dockerhub-username/cats-dogs-classifier:latest
+        image: cats-dogs-classifier:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
           name: http

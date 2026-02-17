@@ -78,7 +78,11 @@ MLOPS_Assignment2_Group126/
 
 ## Setup and Running
 
-You'll need Python 3.9+, Docker, and optionally kubectl/Minikube for K8s deployment.
+**Requirements:**
+- Python 3.9, 3.10, or 3.11 (TensorFlow 2.13 doesn't support 3.12+)
+- Docker and Docker Compose
+- kubectl and Minikube (optional, for K8s deployment)
+- Kaggle account with API credentials
 
 ### 1. Clone and Install
 
@@ -86,9 +90,11 @@ You'll need Python 3.9+, Docker, and optionally kubectl/Minikube for K8s deploym
 git clone https://github.com/devaprasadp-bits/MLOPS_Assignment2_Group126.git
 cd MLOPS_Assignment2_Group126
 
-python3 -m venv venv
-source venv/bin/activate
+# IMPORTANT: Use Python 3.9, 3.10, or 3.11 only
+python3.11 -m venv venv  # or python3.10 or python3.9
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
