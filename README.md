@@ -1,29 +1,47 @@
 # Cats vs Dogs Classification - MLOps Pipeline
 
-**GitHub Repository:** https://github.com/devaprasadp-bits/MLOPS_Assignment2_Group126
-
 **Group 126** - MLOps Assignment 2 (S1-25_AIMLCZG523)
 
-## Contributors:
+## Contributors
 - Devaprasad P           (2023aa05069@wilp.bits-pilani.ac.in)
 - Devender Kumar         (2024aa05065@wilp.bits-pilani.ac.in)
 - Chavali Amrutha Valli  (2024aa05610@wilp.bits-pilani.ac.in)
 - Palakolanu Preethi     (2024aa05608@wilp.bits-pilani.ac.in)
 - Rohan Tirthankar Behera(2024aa05607@wilp.bits-pilani.ac.in)
 
-This project implements an end-to-end MLOps pipeline for binary image classification (Cats vs Dogs) for a pet adoption platform. The pipeline covers model development, experiment tracking with MLflow, containerization, automated CI/CD, Kubernetes deployment, and monitoring.
+**Repository:** https://github.com/devaprasadp-bits/MLOPS_Assignment2_Group126
 
-## What's Included
+---
 
-- Baseline CNN model for binary classification
-- MLflow experiment tracking with automated metrics logging
-- FastAPI REST API with health and prediction endpoints
-- Docker containerization with multi-stage builds
-- GitHub Actions CI/CD pipeline (automated testing, building, deployment)
-- Kubernetes deployment manifests with auto-scaling
-- Comprehensive unit tests (25+ tests with pytest)
-- DVC for data version control
-- Monitoring and logging infrastructure
+We built a complete MLOps pipeline for binary image classification using the Kaggle Cats vs Dogs dataset. The system includes model training with experiment tracking, REST API deployment, Docker containers, automated CI/CD with GitHub Actions, and Kubernetes orchestration.
+
+## What We Built
+
+**Module 1: Model Development & Experiment Tracking**
+- CNN model with 4 convolutional blocks for image classification
+- Training pipeline with data augmentation (rotation, flip, zoom)
+- MLflow integration to track experiments, metrics, and model artifacts
+- DVC setup for dataset versioning
+
+**Module 2: Model Packaging & Containerization**
+- FastAPI service with `/health` and `/predict` endpoints
+- Docker image with multi-stage builds to keep size around 1.2GB
+- docker-compose file to run API + MLflow together
+
+**Module 3: CI Pipeline**
+- 25+ unit tests covering preprocessing and model logic
+- GitHub Actions workflow that runs tests and builds Docker images
+- Automated push to Docker Hub on main branch
+
+**Module 4: CD Pipeline & Deployment**
+- Kubernetes manifests (deployment + service + namespace)
+- CD workflow that deploys to K8s after successful CI
+- Smoke tests to verify deployment health
+
+**Module 5: Monitoring & Logging**
+- Structured logging throughout the application
+- ModelMonitor class to track prediction metrics
+- Health checks with liveness and readiness probes
 
 ## Project Structure
 
@@ -58,342 +76,229 @@ MLOPS_Assignment2_Group126/
 └── README.md                   # This file
 ```
 
-## Prerequisites
+## Setup and Running
 
-- Python 3.9 or 3.10
-- Docker and Docker Compose
-- Git
-- (Optional) kubectl and Minikube for Kubernetes deployment
-- (Optional) DVC for data versioning
+You'll need Python 3.9+, Docker, and optionally kubectl/Minikube for K8s deployment.
 
-## Quick Start
-
-### 1. Clone and Setup
+### 1. Clone and Install
 
 ```bash
-# Clone the repository
 git clone https://github.com/devaprasadp-bits/MLOPS_Assignment2_Group126.git
 cd MLOPS_Assignment2_Group126
 
-# Create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\\Scripts\\activate
+source venv/bin/activate
 
-# Install dependencies
-make install
-# Or: pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-### 2. Prepare Dataset
+### 2. Get the Dataset
 
-Download the Cats vs Dogs dataset from Kaggle:
+We used the Kaggle Dogs vs Cats dataset (25,000 images). Download it:
 
 ```bash
-# Install Kaggle CLI
 pip install kaggle
-
-# Download dataset (requires Kaggle API token in ~/.kaggle/)
 kaggle competitions download -c dogs-vs-cats
 unzip train.zip
 
-# Organize dataset into train/validation/test splits
 python src/prepare_dataset.py --source train --output data
 ```
 
-**Dataset structure after preparation:**
-```
-data/
-├── train/
-│   ├── cats/      # 80% of cat images
-│   └── dogs/      # 80% of dog images
-├── validation/
-│   ├── cats/      # 10% of cat images
-│   └── dogs/      # 10% of dog images
-└── test/
-    ├── cats/      # 10% of cat images
-    └── dogs/      # 10% of dog images
-```
+This splits images into train/validation/test folders (80/10/10 split).
 
-### 3. Train Model (Required)
+### 3. Train the Model
 
-**Note:** Model is not included in the repository. You must train before running the API.
+The trained model isn't in the repo, so you need to run training first:
 
 ```bash
-# Train model with MLflow tracking
-make train
-# Or: python src/train.py --epochs 20 --batch_size 32
-
-# For quick testing (5 epochs)
-make train-quick
+python src/train.py --epochs 20 --batch_size 32
 ```
 
-This will:
-- Load and preprocess images (224x224 RGB)
-- Train a CNN model with data augmentation
-- Log experiments to MLflow (metrics, parameters, artifacts)
-- Save the best model to `models/cats_dogs_model.h5`
+Training takes about 30-60 minutes depending on your hardware. The model gets saved to `models/cats_dogs_model.h5` and all metrics go to MLflow.
 
-### 4. View MLflow Experiments
-
+View experiments:
 ```bash
-make mlflow
-# Or: mlflow ui --port 5000
-```
-Then open http://localhost:5000 to view training metrics, plots, and model artifacts.
-
-## Running the Project
-
-After completing the Quick Start setup above, you can explore different deployment options:
-
-### 5. Run API Locally
-
-**Prerequisites:** Complete step 3 (Train Model) first to create `models/cats_dogs_model.h5`.
-
-```bash
-# Start the API
-make api
-# Or: uvicorn src.inference:app --reload --port 8000
+mlflow ui --port 5000
 ```
 
-Test the API:
+### 4. Run the API
+
+Once you have the trained model:
+
 ```bash
-# Health check
+uvicorn src.inference:app --reload --port 8000
+```
+
+Test it:
+```bash
 curl http://localhost:8000/health
 
-# Make prediction
 curl -X POST "http://localhost:8000/predict" \
-  -F "file=@path/to/cat_image.jpg"
-
-# View interactive docs
-open http://localhost:8000/docs
+  -F "file=@path/to/image.jpg"
 ```
 
-### 6. Docker
-
-**Prerequisites:** Complete step 3 (Train Model) first.
+### 5. Docker Deployment
 
 Build and run with Docker:
 ```bash
-make docker-build
-make docker-run
+docker build -t cats-dogs-classifier:latest .
+docker run -p 8000:8000 cats-dogs-classifier:latest
 ```
 
-Or use docker-compose (runs API + MLflow):
+Or use docker-compose (runs both API and MLflow):
 ```bash
-make docker-compose
-# Or: docker-compose up -d
+docker-compose up -d
 ```
 
-Access:
-- API: http://localhost:8000
-- MLflow: http://localhost:5000
-- API Docs: http://localhost:8000/docs
+Access at http://localhost:8000 (API) and http://localhost:5000 (MLflow).
 
-Stop services:
+### 6. Kubernetes Deployment
+
+We deployed to Minikube for testing:
+
 ```bash
-make docker-stop
-```
-
-### 7. Kubernetes
-
-**Prerequisites:** Complete step 3 (Train Model) and step 6 (Docker build) first.
-
-Deploy to Kubernetes (Minikube):
-```bash
-# Start Minikube
 minikube start
-
-# Load Docker image into Minikube
 minikube image load cats-dogs-classifier:latest
 
-# Deploy application
-make k8s-deploy
-# Or: kubectl apply -f deployment/kubernetes/deployment.yaml
-
-# Check status
-make k8s-status
-# Or: kubectl get pods -n mlops
-```
-
-Access the service:
-```bash
-# Get service URL
-minikube service cats-dogs-service --url -n mlops
-
-# Or port forward
-kubectl port-forward -n mlops svc/cats-dogs-service 8000:80
-```
-
-Test scaling:
-```bash
-# Scale to 5 replicas
-kubectl scale deployment cats-dogs-deployment --replicas=5 -n mlops
-
-# Check pods
+kubectl apply -f deployment/kubernetes/deployment.yaml
 kubectl get pods -n mlops
+
+# Access the service
+minikube service cats-dogs-service --url -n mlops
 ```
+
+The deployment creates 2 replicas with health checks and rolling updates configured.
 
 ## Testing
 
-Run all tests:
+We wrote 25+ unit tests using pytest:
+
 ```bash
-make test
-# Or: pytest tests/ -v --cov=src
+pytest tests/ -v --cov=src
 ```
 
-Run smoke tests (post-deployment):
+Tests cover:
+- Image preprocessing (loading, resizing, normalization)
+- Model architecture (layers, shapes, outputs)
+- API endpoints (health check, predictions)
+
+Smoke tests for post-deployment validation:
 ```bash
 export API_URL=http://localhost:8000
-make test-smoke
-# Or: python tests/smoke_test.py
+python tests/smoke_test.py
 ```
 
-Test results: 25+ unit tests covering preprocessing, model architecture, and inference.
+## CI/CD Setup
 
-## CI/CD Pipeline
+**Continuous Integration** (`.github/workflows/ci.yml`):
+Runs on every push/PR. Steps are: install dependencies → run tests → build Docker image → push to Docker Hub (on main branch only).
 
-The project includes automated GitHub Actions workflows:
+**Continuous Deployment** (`.github/workflows/cd.yml`):
+Triggers after CI passes on main branch. Updates Kubernetes deployment with new image, waits for rollout, then runs smoke tests.
 
-### Continuous Integration (CI)
-**Trigger:** Push or PR to main/develop branch
+GitHub secrets needed:
+- `DOCKER_USERNAME` and `DOCKER_PASSWORD` for Docker Hub
+- `KUBE_CONFIG` for Kubernetes access
+- `API_URL` for smoke tests
 
-Pipeline steps:
-1. Checkout code
-2. Set up Python 3.9
-3. Install dependencies
-4. Run unit tests with coverage
-5. Build Docker image
-6. Push image to Docker Hub (on main branch)
+## Model Details
 
-### Continuous Deployment (CD)
-**Trigger:** After successful CI on main branch
+We built a simple CNN:
+- Input: 224x224 RGB images
+- 4 convolutional blocks (32, 64, 128, 128 filters)
+- MaxPooling after each block
+- Dense layer with 512 units and 0.5 dropout
+- Sigmoid output for binary classification
 
-Pipeline steps:
-1. Pull latest Docker image
-2. Update Kubernetes deployment
-3. Wait for rollout completion
-4. Run smoke tests
-5. Rollback on failure
+Training config:
+- Adam optimizer (lr=0.001)
+- Binary crossentropy loss
+- Data augmentation: rotation, flip, zoom, shift
+- Early stopping on validation loss (patience=5)
 
-**Required GitHub Secrets:**
-- `DOCKER_USERNAME` - Docker Hub username
-- `DOCKER_PASSWORD` - Docker Hub access token
-- `KUBE_CONFIG` - Base64-encoded Kubernetes config
-- `API_URL` - Deployed API URL for smoke tests
-
-## Model Architecture
-
-**CNN Baseline Model:**
-- Input: 224x224x3 RGB images
-- Conv2D layers: 32, 64, 128, 128 filters
-- MaxPooling after each conv block
-- Flatten + Dense(512) + Dropout(0.5)
-- Output: Dense(1) with sigmoid activation
-
-**Training Configuration:**
-- Optimizer: Adam (lr=0.001)
-- Loss: Binary crossentropy
-- Metrics: Accuracy, Precision, Recall
-- Data Augmentation: Rotation, flip, zoom, shift
-- EarlyStopping: patience=5 on val_loss
-- ReduceLROnPlateau: factor=0.5, patience=3
-
-## Expected Results
-
-**Model Performance:**
-- Training Accuracy: ~94%
-- Validation Accuracy: ~92%
-- Test Accuracy: ~90-91%
-- Model Size: ~50MB
-- Inference Time: ~45ms per image
-
-**System Performance:**
-- API Latency: <100ms (average)
-- Throughput: ~20 requests/second (single instance)
-- Container Size: ~1.2GB (optimized multi-stage build)
+Expected accuracy is around 90-92% on test set after 20 epochs.
 
 ## API Endpoints
 
-| Endpoint | Method | Description | Request | Response |
-|----------|--------|-------------|---------|----------|
-| `/` | GET | Root endpoint | - | API information |
-| `/health` | GET | Health check | - | Status, metrics |
-| `/predict` | POST | Classify image | image file | class, probability |
-| `/docs` | GET | API documentation | - | Swagger UI |
+The FastAPI service exposes:
 
-**Example Response:**
+| Endpoint | Method | Input | Output |
+|----------|--------|-------|--------|
+| `/health` | GET | - | Status and system metrics |
+| `/predict` | POST | Image file | class_label, probability, timestamp |
+| `/docs` | GET | - | Interactive API docs |
+
+Response example:
 ```json
 {
   "class_label": "cat",
   "probability": 0.9532,
-  "prediction_time_ms": 45.23,
-  "timestamp": "2026-02-18T10:30:45.123456"
+  "prediction_time_ms": 45.23
 }
 ```
 
-## Monitoring and Logging
+## Issues We Ran Into
 
-The application includes:
-- Structured JSON logging for all requests
-- Request/response tracking with timestamps  
-- Performance metrics (latency, throughput)
-- Health check endpoint with system metrics
-- Post-deployment performance tracking
+1. **Docker image was huge** - Our first Docker build was over 3GB because we included all dev dependencies. Fixed it by using multi-stage builds and separating build-time and runtime requirements. Got it down to about 1.2GB.
 
-Logs are stored in `logs/` directory and excluded from git.
+2. **Kubernetes pods kept restarting** - The health checks were failing because the model takes time to load. Added `initialDelaySeconds: 30` to the readiness probe which solved it.
 
-## Makefile Commands
+3. **CI pipeline timeout** - Tests were running too long because we were creating full models in tests. Changed to use smaller architectures and mock models where possible.
 
-Quick reference for common tasks:
+4. **Dataset versioning** - Can't commit 1GB of images to git. Set up DVC but ended up just documenting the download process clearly since we all needed to download from Kaggle anyway.
+
+5. **Training time in CI** - Tried to train in the CI pipeline initially but it took forever. Moved training to a separate manual step and just test with a pre-trained model in CI.
+
+## Useful Commands
+
+We added a Makefile to simplify common tasks:
 
 ```bash
-make help              # Show all available commands
-make install           # Install dependencies
-make train             # Train model (20 epochs)
-make train-quick       # Quick training (5 epochs)
-make test              # Run unit tests
-make test-smoke        # Run smoke tests
-make docker-build      # Build Docker image
-make docker-compose    # Start all services
-make k8s-deploy        # Deploy to Kubernetes
-make mlflow            # Start MLflow UI
-make api               # Run API locally
-make clean             # Clean cache files
-make lint              # Run code linters
-make format            # Format code
+make install          # Install dependencies
+make train            # Train model (20 epochs)
+make test             # Run all tests
+make docker-build     # Build Docker image
+make docker-compose   # Start services
+make k8s-deploy       # Deploy to Kubernetes
+make mlflow           # Open MLflow UI
+make clean            # Clean temporary files
 ```
 
-## Problems We Faced
+## Project Structure
 
-1. **TensorFlow GPU compatibility**: Initial model training was slow on CPU. Optimized by reducing batch size and using data generators efficiently.
-
-2. **Docker image size**: First build was >3GB. Fixed by using multi-stage builds and cleaning up unnecessary files, reduced to ~1.2GB.
-
-3. **Kubernetes health checks**: Pods were restarting due to slow model loading. Added `initialDelaySeconds: 30` to probes.
-
-4. **CI pipeline timeout**: Tests were timing out due to model creation. Reduced test epochs and used smaller test images.
-
-5. **Data versioning**: Large dataset (~1GB) couldn't be in git. Implemented DVC for data tracking and documented download process.
-
-## Dataset Information
-
-**Source:** Kaggle - Dogs vs. Cats Dataset  
-**Total Images:** 25,000 labeled images  
-**Split:** 80% train (20,000), 10% validation (2,500), 10% test (2,500)  
-**Format:** JPEG images (variable sizes, resized to 224x224)  
-**Classes:** Binary (cats=0, dogs=1)  
-**Preprocessing:** RGB conversion, resizing, normalization [0,1]  
-**Augmentation:** Random rotation, flips, zoom (training only)
+```
+MLOPS_Assignment2_Group126/
+├── src/                        # Source code
+│   ├── train.py                # Training script with MLflow
+│   ├── inference.py            # FastAPI service
+│   ├── model.py                # CNN architecture
+│   ├── data_preprocessing.py   # Data pipeline
+│   ├── monitoring.py           # Metrics tracking
+│   └── prepare_dataset.py      # Dataset splitting
+├── tests/                      # Test suite
+│   ├── test_preprocessing.py
+│   ├── test_model.py
+│   └── smoke_test.py
+├── .github/workflows/          # CI/CD pipelines
+│   ├── ci.yml
+│   └── cd.yml
+├── deployment/kubernetes/      # K8s manifests
+│   └── deployment.yaml
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── Makefile
+└── README.md
+```
 
 ## Notes
 
-- Model training must be completed before API deployment
-- DVC is configured but requires remote storage setup
-- CI/CD pipeline requires GitHub secrets for Docker Hub and Kubernetes
-- Use `internal/` folder for development notes (gitignored)
-- MLflow runs are stored in `mlruns/` directory
-- Docker image needs to be pushed to registry for Kubernetes deployment
+- You need to train the model first before deploying (it's not in the repo)
+- The Kaggle dataset requires a Kaggle account and API token
+- CI/CD secrets need to be configured in GitHub for the pipelines to work
+- We used Minikube for local K8s testing
+- MLflow runs are stored in `mlruns/` directory locally
 
 ---
 
-MLOps Assignment 2 - February 2026
+MLOps Assignment 2 - Group 126 - February 2026
