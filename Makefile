@@ -9,8 +9,9 @@ help:
 	@echo "  make clean           - Remove generated files and caches"
 	@echo "  make test            - Run all tests with coverage"
 	@echo "  make test-smoke      - Run smoke tests"
-	@echo "  make lint            - Check code style"
-	@echo "  make format          - Format code (if black/isort installed)"
+	@echo "  make lint            - Check code style with flake8"
+	@echo "  make format          - Format code with black and isort"
+	@echo "  make format-check    - Check code formatting without changes"
 	@echo "  make train           - Train the model"
 	@echo "  make docker-build    - Build Docker image"
 	@echo "  make docker-run      - Run Docker container"
@@ -41,13 +42,19 @@ test-smoke:
 	python tests/smoke_test.py
 
 lint:
-	@echo "Running basic Python syntax check..."
-	python -m py_compile src/*.py tests/*.py
+	@echo "Running linters..."
+	@command -v flake8 >/dev/null 2>&1 && flake8 src/ tests/ || echo "flake8 not installed, run: pip install flake8"
+	@python -m py_compile src/*.py tests/*.py
 
 format:
-	@echo "Code formatting (install black and isort for auto-format)..."
-	@command -v black >/dev/null 2>&1 && black src/ tests/ || echo "black not installed, skipping"
-	@command -v isort >/dev/null 2>&1 && isort src/ tests/ || echo "isort not installed, skipping"
+	@echo "Formatting code..."
+	@command -v black >/dev/null 2>&1 && black src/ tests/ || echo "black not installed, run: pip install black"
+	@command -v isort >/dev/null 2>&1 && isort src/ tests/ || echo "isort not installed, run: pip install isort"
+
+format-check:
+	@echo "Checking code format..."
+	@command -v black >/dev/null 2>&1 && black --check src/ tests/ || echo "black not installed"
+	@command -v isort >/dev/null 2>&1 && isort --check-only src/ tests/ || echo "isort not installed"
 
 train:
 	python src/train.py --epochs 20 --batch_size 32
