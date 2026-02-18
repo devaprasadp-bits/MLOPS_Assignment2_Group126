@@ -1,5 +1,5 @@
 # Multi-stage build for optimized image size
-FROM python:3.9-slim as builder
+FROM python:3.11-slim as builder
 
 WORKDIR /app
 
@@ -14,22 +14,30 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # Final stage
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
 # Copy installed packages from builder
 COPY --from=builder /root/.local /root/.local
 
+# Create non-root user for security
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+
+# Copy packages to appuser location
+RUN cp -r /root/.local /home/appuser/.local && chown -R appuser:appuser /home/appuser/.local
+
 # Make sure scripts in .local are usable
-ENV PATH=/root/.local/bin:$PATH
+ENV PATH=/home/appuser/.local/bin:$PATH
 
 # Copy application code
 COPY src/ ./src/
 COPY models/ ./models/
+COPY create_model.py .
 
-# Create non-root user for security
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+# Create model if it doesn't exist
+RUN python create_model.py && rm create_model.py
+
 USER appuser
 
 # Expose port

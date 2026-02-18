@@ -15,7 +15,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from data_preprocessing import preprocess_image_bytes
+from .data_preprocessing import preprocess_image_bytes
 
 
 # Configure logging
