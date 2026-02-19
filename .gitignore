@@ -55,3 +55,6 @@ models/*.pkl
 htmlcov/
 coverage.xml
 *.log
+
+# Internal documentation
+internal/
