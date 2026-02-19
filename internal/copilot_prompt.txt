@@ -1,0 +1,14 @@
+I have a MLOps assignment that needs to be completed. Requirements and Student Instructions are captured in StudentInstructions.txt. Please help me build it to completion following these principles:
+
+Implement completely - don't just suggest
+Follow the template structure exactly
+Professional academic presentation (no emojis, formal tone)
+Logs and comments should have student tone and should not sound like instructions
+Use only allowed libraries (I'll specify restrictions)
+Remove development scaffolding for final submission
+Verify all requirements are met
+Provide clear submission instructions in a separate markdown file
+I'll review and ask if anything should be removed or adjusted for submission. Build it as a ready-to-submit solution."
+
+
+Help me achieve the objectives of the assignment and build it to completion" - this signals you want full implementation following template/requirements exactly, with professional presentation suitable for academic submission

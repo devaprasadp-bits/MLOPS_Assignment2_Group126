@@ -64,6 +64,16 @@ MLOPS_Assignment2_Group126/
 ├── .github/workflows/          # CI/CD pipelines
 │   ├── ci.yml                  # Continuous Integration
 │   └── cd.yml                  # Continuous Deployment
+├── scripts/                    # Helper scripts
+│   ├── test_docker.sh          # Docker testing script
+│   ├── test_api_locally.sh     # Local API testing
+│   └── start.sh                # Service startup script
+├── examples/                   # Sample data for testing
+│   └── test_cat.jpg            # Sample image for predictions
+├── internal/                   # Project documentation
+│   ├── SUBMISSION_GUIDE.md     # Video recording guide
+│   ├── QUICKSTART.md           # Quick testing guide
+│   └── TESTING_SUMMARY.md      # Testing results
 ├── models/                     # Trained model artifacts
 ├── logs/                       # Application logs
 ├── .dvc/                       # DVC configuration
@@ -290,6 +300,9 @@ MLOPS_Assignment2_Group126/
 │   └── cd.yml
 ├── deployment/kubernetes/      # K8s manifests
 │   └── deployment.yaml
+├── scripts/                    # Testing scripts
+├── examples/                   # Sample test data
+├── internal/                   # Documentation
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt

@@ -46,9 +46,6 @@ models/*.pt
 models/*.pkl
 !models/.gitkeep
 
-# Docker
-*.log
-
 # MacOS
 .DS_Store
 
@@ -56,9 +53,5 @@ models/*.pkl
 .pytest_cache/
 .coverage
 htmlcov/
-
-# Environment
-.env
-
-# Internal development files
-internal/
+coverage.xml
+*.log
