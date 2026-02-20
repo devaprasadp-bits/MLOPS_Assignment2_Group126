@@ -29,7 +29,7 @@ jobs:
     
     - name: Apply Kubernetes manifests
       run: |
-        kubectl apply -f deployment/kubernetes/deployment.yaml
+        kubectl apply -f deployment/kubernetes/deployment.yaml -n mlops
     
     - name: Update deployment image
       run: |
