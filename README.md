@@ -26,7 +26,7 @@ We built a complete MLOps pipeline for binary image classification using the Kag
 **Module 2: Model Packaging & Containerization**
 - FastAPI service with `/health` and `/predict` endpoints
 - Docker image with multi-stage builds to keep size around 1.2GB
-- docker-compose file to run API + MLflow together
+- docker-compose for local API deployment
 
 **Module 3: CI Pipeline**
 - 25+ unit tests covering preprocessing and model logic
@@ -323,11 +323,11 @@ MLOPS_Assignment2_Group126/
 
 ## Notes
 
-- You need to train the model first before deploying (it's not in the repo)
 - The Kaggle dataset requires a Kaggle account and API token
 - CI/CD secrets need to be configured in GitHub for the pipelines to work
 - We used Minikube for local K8s testing
 - MLflow runs are stored in `mlruns/` directory locally
+- Pre-trained model (46MB) is included in `models/cats_dogs_model.h5`
 
 ---
 
