@@ -30,7 +30,7 @@ echo ""
 # Test root endpoint
 echo ""
 echo "2️⃣ Testing / endpoint:"
-curl -s http://localhost:8000/ | python -m json.tool
+curl -s http://localhost:8000/ | python -m json.tool || curl -s http://localhost:8000/
 echo ""
 
 # Download test image if not exists

@@ -160,12 +160,14 @@ docker build -t cats-dogs-classifier:latest .
 docker run -p 8000:8000 cats-dogs-classifier:latest
 ```
 
-Or use docker-compose (runs both API and MLflow):
+Or use docker-compose (runs the API):
 ```bash
 docker-compose up -d
 ```
 
-Access at http://localhost:8000 (API) and http://localhost:5000 (MLflow).
+Access at http://localhost:8000
+
+**Note:** MLflow can be started separately with `mlflow ui --port 5000` if needed for local experiment tracking.
 
 ### 6. Kubernetes Deployment
 
@@ -208,6 +210,16 @@ python tests/smoke_test.py
 **Continuous Integration** (`.github/workflows/ci.yml`):
 Runs on every push/PR. Steps are: install dependencies → run tests → build Docker image → push to Docker Hub (on main branch only).
 
+**Note:** DVC is excluded from CI installation to avoid pytest plugin conflicts. DVC is used locally for dataset version tracking.
+
+**Continuous Deployment** (`.github/workflows/cd.yml`):
+Triggers after successful CI on main branch. Deploys to Kubernetes and runs smoke tests.
+
+**Required secrets for CI/CD:**
+- `DOCKER_USERNAME`, `DOCKER_PASSWORD`: For Docker Hub publishing
+- `KUBE_CONFIG`: Base64-encoded kubeconfig for deployment
+- `API_URL`: Deployed API endpoint for smoke tests
+
 **Continuous Deployment** (`.github/workflows/cd.yml`):
 Triggers after CI passes on main branch. Updates Kubernetes deployment with new image, waits for rollout, then runs smoke tests.
 
@@ -231,7 +243,7 @@ Training config:
 - Data augmentation: rotation, flip, zoom, shift
 - Early stopping on validation loss (patience=5)
 
-Expected accuracy is around 90-92% on test set after 20 epochs.
+Typical accuracy on test set is around 90% after 20 epochs (see MLflow experiments for actual run metrics).
 
 ## API Endpoints
 
