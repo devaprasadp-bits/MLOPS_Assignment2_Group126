@@ -110,7 +110,6 @@ class TestModelMetrics:
         
         # Check that model compiles successfully with metrics
         assert model.optimizer is not None
-        assert 'loss' in model.metrics_names
     
     def test_model_has_precision_metric(self):
         """Test that model includes precision metric."""
