@@ -109,7 +109,7 @@ class TestModelMetrics:
         model = build_baseline_cnn()
         
         # Check that model compiles successfully with metrics
-        assert model.compiled
+        assert model.optimizer is not None
         assert 'loss' in model.metrics_names
     
     def test_model_has_precision_metric(self):
@@ -117,14 +117,14 @@ class TestModelMetrics:
         model = build_baseline_cnn()
         
         # Verify model is compiled with metrics
-        assert model.compiled
+        assert model.optimizer is not None
     
     def test_model_has_recall_metric(self):
         """Test that model includes recall metric."""
         model = build_baseline_cnn()
         
         # Verify model is compiled with metrics
-        assert model.compiled
+        assert model.optimizer is not None
 
 
 class TestModelInference:
