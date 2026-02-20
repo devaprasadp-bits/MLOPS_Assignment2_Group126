@@ -24,7 +24,7 @@ echo ""
 
 # Test health endpoint
 echo "1️⃣ Testing /health endpoint:"
-curl -s http://localhost:8000/health | python -m json.tool
+curl -s http://localhost:8000/health | python -m json.tool || curl -s http://localhost:8000/health
 echo ""
 
 # Test root endpoint
