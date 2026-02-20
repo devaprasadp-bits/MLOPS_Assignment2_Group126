@@ -32,11 +32,7 @@ ENV PATH=/home/appuser/.local/bin:$PATH
 
 # Copy application code
 COPY src/ ./src/
-COPY models/ ./models/
-COPY create_model.py .
-
-# Create model if it doesn't exist
-RUN python create_model.py && rm create_model.py
+COPY models/cats_dogs_model.h5 ./models/
 
 USER appuser
 

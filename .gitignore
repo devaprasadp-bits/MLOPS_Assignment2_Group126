@@ -40,11 +40,11 @@ wheels/
 mlruns/
 mlartifacts/
 
-# Model artifacts
-models/*.h5
+# Model artifacts (only keep trained cats_dogs_model.h5, exclude others)
 models/*.pt
 models/*.pkl
 !models/.gitkeep
+!models/cats_dogs_model.h5
 
 # MacOS
 .DS_Store

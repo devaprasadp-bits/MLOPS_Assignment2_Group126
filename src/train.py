@@ -201,7 +201,15 @@ def train_model(train_dir, val_dir, config):
         # Log model
         mlflow.tensorflow.log_model(model, "model")
         
-        # Log confusion matrix
+        # Evaluate on validation set and generate confusion matrix
+        print("\nEvaluating model on validation set...")
+        val_metrics = evaluate_model(model, val_generator)
+        
+        # Log evaluation metrics
+        for metric_name, metric_value in val_metrics.items():
+            mlflow.log_metric(metric_name, metric_value)
+        
+        # Log confusion matrix (now it exists)
         mlflow.log_artifact('confusion_matrix.png')
         
         # Final metrics
