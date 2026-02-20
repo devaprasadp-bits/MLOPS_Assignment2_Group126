@@ -14,11 +14,11 @@ sleep 15
 
 echo ""
 echo "=== Testing health endpoint ==="
-curl -s http://localhost:8000/health | jq
+curl -s http://localhost:8000/health | python -m json.tool || curl -s http://localhost:8000/health
 
 echo ""
 echo "=== Testing root endpoint ==="
-curl -s http://localhost:8000/ | jq
+curl -s http://localhost:8000/ | python -m json.tool || curl -s http://localhost:8000/
 
 echo ""
 echo "✓ All tests passed!"

@@ -70,11 +70,8 @@ MLOPS_Assignment2_Group126/
 │   └── start.sh                # Service startup script
 ├── examples/                   # Sample data for testing
 │   └── test_cat.jpg            # Sample image for predictions
-├── internal/                   # Project documentation
-│   ├── SUBMISSION_GUIDE.md     # Video recording guide
-│   ├── QUICKSTART.md           # Quick testing guide
-│   └── TESTING_SUMMARY.md      # Testing results
 ├── models/                     # Trained model artifacts
+│   └── cats_dogs_model.h5      # Pre-trained CNN model (46MB)
 ├── logs/                       # Application logs
 ├── .dvc/                       # DVC configuration
 ├── data.dvc                    # DVC data tracking
@@ -122,15 +119,17 @@ python src/prepare_dataset.py --source train --output data
 
 This splits images into train/validation/test folders (80/10/10 split).
 
-### 3. Train the Model
+### 3. Use Pre-trained Model or Train New One
 
-The trained model isn't in the repo, so you need to run training first:
+A pre-trained model (`models/cats_dogs_model.h5`) is included. To retrain:
 
 ```bash
 python src/train.py --epochs 20 --batch_size 32
 ```
 
-Training takes about 30-60 minutes depending on your hardware. The model gets saved to `models/cats_dogs_model.h5` and all metrics go to MLflow.
+Training takes 30-60 minutes. The model saves to `models/cats_dogs_model.h5` and metrics go to MLflow.
+
+**Note:** DVC tracks the `data/` folder structure. The actual dataset (1GB+) must be downloaded from Kaggle.
 
 View experiments:
 ```bash

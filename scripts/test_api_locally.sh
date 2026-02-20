@@ -6,7 +6,8 @@ echo ""
 
 # Check if model exists
 if [ ! -f "models/cats_dogs_model.h5" ]; then
-    echo "❌ Model not found! Run: python create_test_model.py"
+    echo "❌ Model not found! The pre-trained model should be in models/"
+    echo "Or train a new one: python src/train.py --epochs 5 --batch_size 16"
     exit 1
 fi
 
