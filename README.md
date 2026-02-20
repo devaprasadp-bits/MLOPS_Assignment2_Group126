@@ -291,36 +291,6 @@ make mlflow           # Open MLflow UI
 make clean            # Clean temporary files
 ```
 
-## Project Structure
-
-```
-MLOPS_Assignment2_Group126/
-├── src/                        # Source code
-│   ├── train.py                # Training script with MLflow
-│   ├── inference.py            # FastAPI service
-│   ├── model.py                # CNN architecture
-│   ├── data_preprocessing.py   # Data pipeline
-│   ├── monitoring.py           # Metrics tracking
-│   └── prepare_dataset.py      # Dataset splitting
-├── tests/                      # Test suite
-│   ├── test_preprocessing.py
-│   ├── test_model.py
-│   └── smoke_test.py
-├── .github/workflows/          # CI/CD pipelines
-│   ├── ci.yml
-│   └── cd.yml
-├── deployment/kubernetes/      # K8s manifests
-│   └── deployment.yaml
-├── scripts/                    # Testing scripts
-├── examples/                   # Sample test data
-├── internal/                   # Documentation
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── Makefile
-└── README.md
-```
-
 ## Notes
 
 - The Kaggle dataset requires a Kaggle account and API token
