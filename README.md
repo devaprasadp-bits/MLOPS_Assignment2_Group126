@@ -3,11 +3,11 @@
 **Group 126** - MLOps Assignment 2 (S1-25_AIMLCZG523)
 
 ## Contributors
+- Rohan Tirthankar Behera(2024aa05607@wilp.bits-pilani.ac.in)
 - Devaprasad P           (2023aa05069@wilp.bits-pilani.ac.in)
 - Devender Kumar         (2024aa05065@wilp.bits-pilani.ac.in)
 - Chavali Amrutha Valli  (2024aa05610@wilp.bits-pilani.ac.in)
 - Palakolanu Preethi     (2024aa05608@wilp.bits-pilani.ac.in)
-- Rohan Tirthankar Behera(2024aa05607@wilp.bits-pilani.ac.in)
 
 **Repository:** https://github.com/devaprasadp-bits/MLOPS_Assignment2_Group126
 
